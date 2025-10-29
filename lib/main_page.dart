@@ -9,11 +9,19 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  late TextEditingController _textController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black87,
+        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
         title: Text('Take a picture'),
         titleTextStyle: TextStyle(fontSize: 22),
         centerTitle: true,
@@ -23,11 +31,33 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.black87,
-        child: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: Colors.white,
-          shape: CircleBorder(side: BorderSide(color: Colors.white, width: 4)),
+        color: Theme.of(context).colorScheme.surfaceTint,
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: TextField(
+                  controller: _textController,
+                  decoration: InputDecoration(hintText: 'Add picture comment'),
+                ),
+              ),
+            ),
+            Center(
+              child: IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.send,
+                  size: 40,
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
