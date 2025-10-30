@@ -2,14 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
 class CameraScreen extends StatefulWidget {
+  const CameraScreen({super.key});
+
   @override
-  _CameraScreenState createState() => _CameraScreenState();
+  CameraScreenState createState() => CameraScreenState();
 }
 
-class _CameraScreenState extends State<CameraScreen> {
+class CameraScreenState extends State<CameraScreen> {
   CameraController? _controller;
   List<CameraDescription>? _cameras;
   bool _isLoading = true;
+
+  Future<XFile?> takePicture() async {
+    if (_controller == null || !_controller!.value.isInitialized) {
+      debugPrint('Camera is not ready');
+      return null;
+    }
+
+    try {
+      final XFile photo = await _controller!.takePicture();
+      debugPrint('Photo taken: ${photo.path}');
+      return photo;
+    } catch (e) {
+      debugPrint('Error taking picture: $e');
+      return null;
+    }
+  }
 
   @override
   void initState() {
