@@ -19,7 +19,6 @@ class PhotoCapturing extends StatelessWidget {
           brightness: Brightness.light,
         ),
       ),
-      home: const HomePage(),
       initialRoute: '/home',
       routes: {
         //Home page

@@ -40,8 +40,6 @@ class _CameraScreenState extends State<CameraScreen> {
     if (_isLoading) return Center(child: CircularProgressIndicator());
     if (_controller == null) return Center(child: Text('No camera available'));
 
-    return Stack(
-      children: [Positioned.fill(child: CameraPreview(_controller!))],
-    );
+    return CameraPreview(_controller!);
   }
 }
