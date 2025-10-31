@@ -33,15 +33,17 @@ class _MainPageState extends State<MainPage> {
     setState(() => _isLoading = true);
     try {
       final position = await _getCurrentLocation();
-
       final photo = await _cameraScreenKey.currentState?.takePicture();
+
       if (photo == null) return;
 
-      await ApiService.uploadPhoto(
+      final comment = _textController.text.isEmpty
+          ? "A photo from the phone camera."
+          : _textController.text;
+
+      await ApiService.uploadAndSavePhoto(
         imagePath: photo.path,
-        comment: _textController.text.isEmpty
-            ? "A photo from the phone camera."
-            : _textController.text,
+        comment: comment,
         latitude: position.latitude,
         longitude: position.longitude,
       );
@@ -100,7 +102,7 @@ class _MainPageState extends State<MainPage> {
         titleTextStyle: TextStyle(fontSize: 22),
         centerTitle: true,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: (!_isLoading) ? () => Navigator.pop(context) : null,
           icon: Icon(Icons.keyboard_backspace, size: 32, color: Colors.white),
         ),
       ),
