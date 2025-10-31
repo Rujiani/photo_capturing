@@ -15,7 +15,7 @@ class PhotoCapturing extends StatelessWidget {
       title: 'Photo Capturing',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
+          seedColor: Colors.blueGrey,
           brightness: Brightness.light,
         ),
       ),

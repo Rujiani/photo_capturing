@@ -14,15 +14,28 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   late TextEditingController _textController;
   final GlobalKey<CameraScreenState> _cameraScreenKey = GlobalKey();
-  bool _isUploading = false;
+  bool _isLoading = false;
+
+  Future<void> _switchCamera() async {
+    setState(() => _isLoading = true);
+    try {
+      _cameraScreenKey.currentState?.switchCamera();
+    } catch (e) {
+      if (mounted) {
+        debugPrint('Error: $e');
+      }
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
   Future<void> _captureAndUpload() async {
-    setState(() => _isUploading = true);
+    setState(() => _isLoading = true);
     try {
+      final position = await _getCurrentLocation();
+
       final photo = await _cameraScreenKey.currentState?.takePicture();
       if (photo == null) return;
-
-      final position = await _getCurrentLocation();
 
       await ApiService.uploadPhoto(
         imagePath: photo.path,
@@ -46,7 +59,7 @@ class _MainPageState extends State<MainPage> {
       }
     } finally {
       _textController.clear();
-      setState(() => _isUploading = false);
+      setState(() => _isLoading = false);
     }
   }
 
@@ -80,9 +93,9 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surfaceTint,
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
+        backgroundColor: Colors.black45,
         title: Text('Take a picture'),
         titleTextStyle: TextStyle(fontSize: 22),
         centerTitle: true,
@@ -95,9 +108,17 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: Padding(
         padding: MediaQuery.of(context).viewInsets,
         child: BottomAppBar(
-          color: Theme.of(context).colorScheme.surfaceTint,
+          color: Colors.black45,
           child: Row(
             children: [
+              IconButton(
+                onPressed: (!_isLoading) ? _switchCamera : null,
+                icon: Icon(
+                  Icons.flip_camera_ios_outlined,
+                  size: 40,
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                ),
+              ),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
@@ -114,7 +135,7 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
               IconButton(
-                onPressed: (!_isUploading) ? _captureAndUpload : null,
+                onPressed: (!_isLoading) ? _captureAndUpload : null,
                 icon: Icon(
                   Icons.send,
                   size: 40,
