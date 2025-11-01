@@ -45,8 +45,11 @@ class _HomePageState extends State<HomePage> {
         Align(
           alignment: Alignment.center,
           child: Container(
-            decoration: BoxDecoration(border: Border.all()),
-            constraints: BoxConstraints(maxHeight: 400, maxWidth: 300),
+            decoration: BoxDecoration(border: Border.all(width: 1.2)),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.5,
+              maxWidth: MediaQuery.of(context).size.width * 0.8,
+            ),
             child: Image.memory(_lastPhoto!.imageBytes, fit: BoxFit.contain),
           ),
         ),
