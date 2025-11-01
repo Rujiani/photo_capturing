@@ -121,7 +121,7 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.only(bottom: 30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -137,34 +137,45 @@ class _MainPageState extends State<MainPage> {
                     )
                   : CameraScreen(key: _cameraScreenKey),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                AnimatedOpacity(
-                  duration: Duration(milliseconds: 300),
-                  opacity: _showBottomBar ? 0.0 : 1.0,
-                  child: IconButton(
-                    onPressed: (!_isLoading) ? _switchCamera : null,
-                    icon: Icon(
-                      Icons.flip_camera_ios_outlined,
-                      size: 40,
-                      color: Theme.of(context).colorScheme.surfaceContainer,
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(),
+                color: Theme.of(context).colorScheme.surfaceDim,
+              ),
+              margin: EdgeInsets.symmetric(horizontal: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  AnimatedOpacity(
+                    duration: Duration(milliseconds: 300),
+                    opacity: _showBottomBar ? 0.0 : 1.0,
+                    child: IconButton(
+                      onPressed: (!_isLoading) ? _switchCamera : null,
+                      icon: Icon(
+                        Icons.flip_camera_ios_outlined,
+                        size: 40,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
-                ),
-                AnimatedOpacity(
-                  duration: Duration(milliseconds: 300),
-                  opacity: _showBottomBar ? 0.0 : 1.0,
-                  child: IconButton(
-                    iconSize: 40,
-                    onPressed: () async {
-                      await _capture();
-                      setState(() => _showBottomBar = true);
-                    },
-                    icon: Icon(Icons.photo_camera, color: Colors.white),
+                  AnimatedOpacity(
+                    duration: Duration(milliseconds: 300),
+                    opacity: _showBottomBar ? 0.0 : 1.0,
+                    child: IconButton(
+                      iconSize: 40,
+                      onPressed: () async {
+                        await _capture();
+                        setState(() => _showBottomBar = true);
+                      },
+                      icon: Icon(
+                        Icons.photo_camera_outlined,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
