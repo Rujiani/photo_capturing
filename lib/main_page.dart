@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:photo_capturing/camera_screen.dart';
 import 'package:photo_capturing/api_service.dart';
@@ -15,6 +17,9 @@ class _MainPageState extends State<MainPage> {
   late TextEditingController _textController;
   final GlobalKey<CameraScreenState> _cameraScreenKey = GlobalKey();
   bool _isLoading = false;
+  bool _showBottomBar = false;
+  bool _isCaptured = false;
+  var photo;
 
   Future<void> _switchCamera() async {
     setState(() => _isLoading = true);
@@ -29,13 +34,18 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  Future<void> _captureAndUpload() async {
+  Future<void> _capture() async {
+    photo = await _cameraScreenKey.currentState?.takePicture();
+    if (photo == null) return;
+    _isCaptured = true;
+  }
+
+  Future<void> _upload() async {
     setState(() => _isLoading = true);
     try {
       final position = await _getCurrentLocation();
-      final photo = await _cameraScreenKey.currentState?.takePicture();
 
-      if (photo == null) return;
+      if (!_isCaptured) return;
 
       final comment = _textController.text.isEmpty
           ? "A photo from the phone camera."
@@ -61,7 +71,11 @@ class _MainPageState extends State<MainPage> {
       }
     } finally {
       _textController.clear();
-      setState(() => _isLoading = false);
+      setState(() {
+        _isLoading = false;
+        _isCaptured = false;
+        _showBottomBar = false;
+      });
     }
   }
 
@@ -106,45 +120,89 @@ class _MainPageState extends State<MainPage> {
           icon: Icon(Icons.keyboard_backspace, size: 32, color: Colors.white),
         ),
       ),
-      body: Center(child: CameraScreen(key: _cameraScreenKey)),
-      bottomNavigationBar: Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: BottomAppBar(
-          color: Colors.black45,
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: (!_isLoading) ? _switchCamera : null,
-                icon: Icon(
-                  Icons.flip_camera_ios_outlined,
-                  size: 40,
-                  color: Theme.of(context).colorScheme.surfaceContainer,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Theme.of(context).colorScheme.surfaceContainer,
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
-                      hintText: 'Add a picture comment',
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+              child: (_isCaptured)
+                  ? Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.file(File(photo.path)),
+                        if (_isLoading)
+                          CircularProgressIndicator(color: Colors.white),
+                      ],
+                    )
+                  : CameraScreen(key: _cameraScreenKey),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 300),
+                  opacity: _showBottomBar ? 0.0 : 1.0,
+                  child: IconButton(
+                    onPressed: (!_isLoading) ? _switchCamera : null,
+                    icon: Icon(
+                      Icons.flip_camera_ios_outlined,
+                      size: 40,
+                      color: Theme.of(context).colorScheme.surfaceContainer,
                     ),
                   ),
                 ),
-              ),
-              IconButton(
-                onPressed: (!_isLoading) ? _captureAndUpload : null,
-                icon: Icon(
-                  Icons.send,
-                  size: 40,
-                  color: Theme.of(context).colorScheme.surfaceContainer,
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 300),
+                  opacity: _showBottomBar ? 0.0 : 1.0,
+                  child: IconButton(
+                    iconSize: 40,
+                    onPressed: () async {
+                      await _capture();
+                      setState(() => _showBottomBar = true);
+                    },
+                    icon: Icon(Icons.photo_camera, color: Colors.white),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          height: _showBottomBar ? 120 : 0,
+          child: BottomAppBar(
+            color: Colors.black45,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Theme.of(context).colorScheme.surfaceContainer,
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: TextField(
+                      controller: _textController,
+                      decoration: InputDecoration(
+                        hintText: 'Add a picture comment',
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: (!_isLoading) ? _upload : null,
+                  icon: Icon(
+                    Icons.send,
+                    size: 40,
+                    color: Theme.of(context).colorScheme.surfaceContainer,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
