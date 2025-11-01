@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             decoration: BoxDecoration(border: Border.all(width: 1.2)),
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.5,
+              maxHeight: MediaQuery.of(context).size.height * 0.35,
               maxWidth: MediaQuery.of(context).size.width * 0.8,
             ),
             child: Image.memory(_lastPhoto!.imageBytes, fit: BoxFit.contain),
@@ -59,6 +59,8 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             _lastPhoto!.comment,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         Text(
