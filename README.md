@@ -5,11 +5,11 @@ A Flutter application for capturing and saving photos with comments.
 
 ## Features
 
-- **Photo Capture** - Use device camera
-- **Local Storage** - Photos saved to device storage  
-- **Comments** - Add text to each photo
-- **Timestamps** - Automatic date and time tracking
-- **Photo Management** - View and delete saved photos
+- Photo Capture - Use device camera
+- Local Storage - Photos saved to device storage  
+- Comments - Add text to each photo
+- Timestamps - Automatic date and time tracking
+- Photo Management - View and delete saved photos
 
 ## Tech Stack
 
@@ -52,4 +52,5 @@ Update the API URL in `api_service.dart`:
 ```dart
 Uri.parse('https://your-api.com/upload_photo/')
 ```
+
 
