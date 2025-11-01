@@ -53,4 +53,3 @@ Update the API URL in `api_service.dart`:
 ```dart
 Uri.parse('https://your-api.com/upload_photo/')
 ```
-```
