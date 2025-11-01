@@ -1,15 +1,15 @@
 ```markdown
-# Photo Capturing App 📸
+# Photo Capturing App 
 
 A Flutter application for capturing and saving photos with comments.
 
 ## Features
 
-- **Photo Capture** - Use device camera
-- **Local Storage** - Photos saved to device storage  
-- **Comments** - Add text to each photo
-- **Timestamps** - Automatic date and time tracking
-- **Photo Management** - View and delete saved photos
+- Photo Capture - Use device camera
+- Local Storage - Photos saved to device storage  
+- Comments - Add text to each photo
+- Timestamps - Automatic date and time tracking
+- Photo Management - View and delete saved photos
 
 ## Tech Stack
 
@@ -20,7 +20,6 @@ A Flutter application for capturing and saving photos with comments.
 
 ## Installation
 
-```bash
 git clone https://github.com/Rujiani/photo_capturing.git
 cd photo_capturing
 flutter pub get
@@ -53,3 +52,5 @@ Update the API URL in `api_service.dart`:
 ```dart
 Uri.parse('https://your-api.com/upload_photo/')
 ```
+
+
